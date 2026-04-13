@@ -38,5 +38,5 @@ void loop() {
     // Display on LCD
     display.showTemps(temps);
 
-    delay(2000);
+    delay(1000);
 }
