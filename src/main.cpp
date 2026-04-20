@@ -30,10 +30,11 @@ void loop() {
     for (int i = 0; i < NUM_SENSORS; i++) {
         Serial.println("T" + String(i) + ": " + String(temps[i]));
     }
-
+    
     // Save to SD
     String timestamp = rtc.getTimestamp();
-    sdcard.logData(timestamp, temps);
+    Serial.println("Timestamp: " + timestamp);
+    //sdcard.logData(timestamp, temps);
 
     // Display on LCD
     display.showTemps(temps);
