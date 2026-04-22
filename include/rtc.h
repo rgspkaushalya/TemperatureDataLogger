@@ -18,7 +18,7 @@ public:
             Serial.println("RTC not found!");
         }
 
-        //rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
+       rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
     }
 
     String getTimestamp() {
