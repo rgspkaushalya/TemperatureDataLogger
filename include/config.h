@@ -21,5 +21,9 @@
 #define BTN_NEW  12
 #define BTN_SEND 13
 
+// ---------- ALERT ----------
+#define ALERT_THRESHOLD 32.0
+#define NORMAL_THRESHOLD 31.9   
+#define LED_PIN 14
 
 #endif

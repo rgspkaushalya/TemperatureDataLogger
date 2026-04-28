@@ -21,6 +21,8 @@ void setup() {
 
     pinMode(BTN_NEW, INPUT_PULLUP);
     pinMode(BTN_SEND, INPUT_PULLUP);
+    pinMode(LED_PIN, OUTPUT);
+    digitalWrite(LED_PIN, LOW); // Initialize LED to off
 
     wifi.connectWiFi();
 
@@ -63,7 +65,27 @@ void loop() {
         }
     }*/
 
+    static bool alertSent = false;
+    // HIGH TEMPERATURE
+    if ((temps[0] > ALERT_THRESHOLD || temps[1] > ALERT_THRESHOLD || temps[2] > ALERT_THRESHOLD || temps[3] > ALERT_THRESHOLD) && !alertSent) {
+        digitalWrite(LED_PIN, HIGH);
+
+        alertSent = true;
+
+        Serial.println("Alert sent");
+    }
+
+    // BACK TO NORMAL
+    if ((temps[0] < NORMAL_THRESHOLD && temps[1] < NORMAL_THRESHOLD && temps[2] < NORMAL_THRESHOLD && temps[3] < NORMAL_THRESHOLD) && alertSent) {
+        digitalWrite(LED_PIN, LOW);
+
+        alertSent = false;
+
+        Serial.println("Temperature normal");
+    }
+
     String timestamp = rtc.getTimestamp();
+    Serial.println("Timestamp: " + timestamp);
 
     // Save to SD ONLY
     sdcard.logData(timestamp, temps);

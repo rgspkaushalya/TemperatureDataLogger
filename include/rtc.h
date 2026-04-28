@@ -25,7 +25,7 @@ public:
         DateTime now = rtc.now();
 
         char buffer[25];
-        sprintf(buffer, "%04d-%02d-%02d,%02d:%02d:%02d",
+        sprintf(buffer, "%04d-%02d-%02d/%02d:%02d:%02d",
                 now.year(), now.month(), now.day(),
                 now.hour(), now.minute(), now.second());
 
