@@ -1,54 +1,77 @@
+#ifndef WIFISENDER_H
+#define WIFISENDER_H
+
+#include <Arduino.h>
 #include <WiFi.h>
 #include <HTTPClient.h>
+#include <SD.h>
 
 class WiFiSender {
-  private:
-    const char* ssid;
-    const char* password;
+private:
+    String ssid;
+    String password;
     String serverURL;
 
-  public:
-    WiFiSender(const char* ssid, const char* password, String url) {
-      this->ssid = ssid;
-      this->password = password;
-      this->serverURL = url;
+public:
+    WiFiSender(String s, String p, String url) {
+        ssid = s;
+        password = p;
+        serverURL = url;
     }
 
     void connectWiFi() {
-      WiFi.begin(ssid, password);
+        WiFi.begin(ssid.c_str(), password.c_str());
 
-      Serial.print("Connecting to WiFi");
-      while (WiFi.status() != WL_CONNECTED) {
-        delay(500);
-        Serial.print(".");
-      }
+        Serial.print("Connecting WiFi");
+        while (WiFi.status() != WL_CONNECTED) {
+            delay(500);
+            Serial.print(".");
+        }
 
-      Serial.println("\nWiFi Connected!");
-      Serial.println(WiFi.localIP());
+        Serial.println("\nWiFi connected");
     }
 
-    void sendTemperature(float temp) {
-      if (WiFi.status() == WL_CONNECTED) {
+    // NEW: send full CSV file
+    void sendCSV(String filePath) {
+
+        File file = SD.open(filePath);
+        if (!file) {
+            Serial.println("Failed to open CSV file");
+            return;
+        }
+
+        if (WiFi.status() != WL_CONNECTED) {
+            Serial.println("WiFi not connected");
+            return;
+        }
 
         HTTPClient http;
 
-        String fullURL = serverURL + "?temp=" + String(temp);
+        http.begin(serverURL);
+        http.addHeader("Content-Type", "text/csv");
 
-        http.begin(fullURL);
+        String payload = "";
 
-        int responseCode = http.GET();
+        while (file.available()) {
+            payload += (char)file.read();
+        }
 
-        if (responseCode > 0) {
-          Serial.print("Data sent. Response: ");
-          Serial.println(responseCode);
+        file.close();
+
+        Serial.println("Sending CSV file...");
+
+        int httpCode = http.POST(payload);
+
+        if (httpCode > 0) {
+            Serial.print("Upload success, code: ");
+            Serial.println(httpCode);
         } else {
-          Serial.print("Error sending data: ");
-          Serial.println(responseCode);
+            Serial.print("Upload failed, error: ");
+            Serial.println(http.errorToString(httpCode));
         }
 
         http.end();
-      } else {
-        Serial.println("WiFi not connected");
-      }
     }
 };
+
+#endif
