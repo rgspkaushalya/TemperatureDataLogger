@@ -22,8 +22,16 @@
 #define BTN_SEND 13
 
 // ---------- ALERT ----------
-#define ALERT_THRESHOLD 32.0
-#define NORMAL_THRESHOLD 31.9   
+float HIGH_ALERT_THRESHOLD;   // LED turns ON above this
+float HIGH_NORMAL_THRESHOLD;   // LED turns OFF once below this
+
+float LOW_ALERT_THRESHOLD;    // LED turns ON below this
+float LOW_NORMAL_THRESHOLD;   // LED turns OFF once above this
 #define LED_PIN 14
+
+#define API_KEY "AIzaSyBQ5AiCcmJ52DTGmAYDUUzgAqCrsWtPYWk"
+#define DATABASE_URL "https://temperaturedatalogger-47525-default-rtdb.firebaseio.com/"
+
+#define THRESHOLD_REFRESH_INTERVAL 30
 
 #endif

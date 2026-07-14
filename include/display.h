@@ -38,6 +38,18 @@ public:
         lcd.print("T4:");
         lcd.print(temps[3]);
     }
+
+    void showMessage(String message1 , String message2) {
+        lcd.backlight();
+        lcd.clear();
+        delay(10);
+        lcd.setCursor(0, 0);
+        lcd.print(message1);
+
+        lcd.setCursor(3, 1);
+        lcd.print(message2);
+        Serial.println(message2);
+    }
 };
 
 #endif
